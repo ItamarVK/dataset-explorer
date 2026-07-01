@@ -6,6 +6,8 @@ import { DataGrid } from './components/DataGrid';
 import { AIPrompt } from './components/AIPrompt';
 
 function App() {
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://dataset-explorer-backend-ntvm.onrender.com';
+
   const [file, setFile] = useState<File | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   
@@ -31,7 +33,7 @@ function App() {
       const formData = new FormData();
       formData.append('file', file);
       
-      const res = await fetch('http://localhost:8000/upload', {
+      const res = await fetch(`${API_BASE_URL}/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -43,7 +45,7 @@ function App() {
       const data = await res.json(); 
       
       // Fetch rows
-      const rowsRes = await fetch('http://localhost:8000/rows?limit=100&offset=0');
+      const rowsRes = await fetch(`${API_BASE_URL}/rows?limit=100&offset=0`);
       if (rowsRes.ok) {
         const rowsData = await rowsRes.json();
         setRows(rowsData.data);
@@ -65,7 +67,7 @@ function App() {
     setLoading(true);
     
     try {
-      const res = await fetch('http://localhost:8000/ask', {
+      const res = await fetch(`${API_BASE_URL}/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question })
