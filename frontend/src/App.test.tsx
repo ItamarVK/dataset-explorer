@@ -5,7 +5,7 @@ import { DataGrid } from './components/DataGrid';
 
 describe('Dataset Explorer Frontend', () => {
   beforeEach(() => {
-    global.fetch = vi.fn();
+    globalThis.fetch = vi.fn();
   });
   it('renders the File Upload UI', () => {
     render(<App />);
@@ -38,7 +38,7 @@ describe('Dataset Explorer Frontend', () => {
   });
 
   it('calls the backend API when uploading a valid file', async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (globalThis.fetch as any).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ message: "Success", rows: 10, columns: ["A"] })
     });
@@ -56,7 +56,7 @@ describe('Dataset Explorer Frontend', () => {
 
     // Verify that the fetch API was actually called with the correct endpoint
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         'http://localhost:8000/upload',
         expect.objectContaining({
           method: 'POST'
@@ -66,11 +66,11 @@ describe('Dataset Explorer Frontend', () => {
   });
 
   it('fetches rows from backend after a successful upload', async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (globalThis.fetch as any).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ message: "Success", rows: 10, columns: ["A"] })
     });
-    (global.fetch as any).mockResolvedValueOnce({
+    (globalThis.fetch as any).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ data: [{"A": "Value1"}], total: 1 })
     });
@@ -83,7 +83,7 @@ describe('Dataset Explorer Frontend', () => {
     fireEvent.click(uploadBtn);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         'http://localhost:8000/rows?limit=100&offset=0'
       );
     });
@@ -126,7 +126,7 @@ describe('Dataset Explorer Frontend', () => {
   });
 
   it('calls the backend API when asking a question', async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (globalThis.fetch as any).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ sql_query: "SELECT *", answer: "The AI answer" })
     });
@@ -139,7 +139,7 @@ describe('Dataset Explorer Frontend', () => {
     fireEvent.click(askBtn);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         'http://localhost:8000/ask',
         expect.objectContaining({
           method: 'POST',
