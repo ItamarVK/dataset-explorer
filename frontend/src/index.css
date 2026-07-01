@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --primary-color: #0f172a;
+  --primary-hover: #334155;
+  --secondary-color: #f1f5f9;
+  --secondary-hover: #e2e8f0;
+  --border-color: #cbd5e1;
+  --error-color: #ef4444;
+  --font-family: 'Inter', sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 1000px;
+  padding: 3rem 2rem;
+}
+
+.app-header {
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--text-primary);
+  padding-bottom: 1rem;
+}
+
+.app-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Minimalist Card */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.card h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+/* Form Elements */
+.upload-controls, .ask-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.file-input, .text-input {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-family);
+  outline: none;
+  border-radius: 0; /* brutalist sharp edges */
+  transition: border-color 0.2s ease;
+}
+
+.file-input { flex: 1; }
+.text-input { width: 100%; }
+
+.text-input:focus {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 1px var(--text-primary);
+}
+
+/* Buttons */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid transparent;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: all 0.2s ease;
+}
+
+.primary-btn {
+  background-color: var(--primary-color);
+  color: white;
+}
+.primary-btn:hover { background-color: var(--primary-hover); }
+
+.secondary-btn {
+  background-color: var(--secondary-color);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+.secondary-btn:hover { background-color: var(--secondary-hover); }
+
+/* Data Grid */
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+th {
+  background: var(--secondary-color);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* Full Screen Loader overlay */
+.fullscreen-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-text {
+  color: var(--error-color);
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 3rem !important;
+  font-style: italic;
+}
+
+/* AI Anchor - The conversational distinct feel */
+.response-panel {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: var(--primary-color);
+  color: white;
+  min-height: 80px;
+  border-left: 4px solid var(--border-color);
+}
+
+.placeholder-text {
+  color: #94a3b8;
+  font-family: var(--font-mono);
+}
