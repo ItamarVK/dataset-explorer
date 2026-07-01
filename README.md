@@ -62,8 +62,8 @@ The backend requires environment variables for secure configuration. Never commi
 
 ## What I'd do next
 Given more time, here are the top improvements I would prioritize:
-- **In-App Data Editing**: Allow users to edit or delete rows directly from the grid interface and sync these changes back to the database.
-- **Advanced Visualization**: Integrate a charting library (like Chart.js or Recharts) to automatically graph query results alongside the LLM's text summary.
-- **Streaming LLM Responses**: Implement Server-Sent Events (SSE) or WebSockets to stream the LLM's answer back to the frontend in real-time, improving perceived performance.
-- **User Authentication**: Add user accounts so different users can upload and manage their own private datasets.
-- **Support for Complicated AI Questions**: Improve the LLM prompting and underlying execution engine to reliably handle complex analytical questions (like finding the median or percentiles) by introducing more advanced data manipulation tools beyond simple SQLite.
+- **In-App Data Editing**: Enable users to directly modify and delete dataset records within the application.
+- **Advanced Visualization**: Automatically generate graphs and charts to visually represent the query results alongside the AI's answers.
+- **Streaming AI Responses**: Display the AI's response in real-time as it thinks, creating a faster and smoother user experience.
+- **User Authentication**: Introduce personal accounts so users can securely store and manage their own private datasets.
+- **Handle Complicated AI Questions**: Expand the AI's capabilities to accurately answer highly complex analytical queries (like calculating percentiles or finding the worker with the median salary).
