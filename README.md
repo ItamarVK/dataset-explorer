@@ -66,3 +66,4 @@ Given more time, here are the top improvements I would prioritize:
 - **Advanced Visualization**: Integrate a charting library (like Chart.js or Recharts) to automatically graph query results alongside the LLM's text summary.
 - **Streaming LLM Responses**: Implement Server-Sent Events (SSE) or WebSockets to stream the LLM's answer back to the frontend in real-time, improving perceived performance.
 - **User Authentication**: Add user accounts so different users can upload and manage their own private datasets.
+- **Support for Complicated AI Questions**: Improve the LLM prompting and underlying execution engine to reliably handle complex analytical questions (like finding the median or percentiles) by introducing more advanced data manipulation tools beyond simple SQLite.
