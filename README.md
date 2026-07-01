@@ -1,95 +1,68 @@
 # Dataset Explorer (AI-Powered)
 
-A full-stack application built with **FastAPI** (Python) and **React** (Vite), designed to upload tabular data (CSVs), view the dataset, and ask natural language questions answered via an LLM SQL-generation pipeline (Google Gemini).
+## Architecture Overview
+A full-stack application built with FastAPI (Python) and React (Vite). The backend is structured to separate routing, database interaction, and AI intelligence for high maintainability.
 
-## 🏗 Architecture & API Design
-The backend is structured to separate routing, database interaction, and AI intelligence for high maintainability.
+We use a **two-step "Text-to-SQL" pipeline** to process user queries without exposing raw data:
+1. **Prompt 1 (SQL Generation):** The database schema is injected into the LLM prompt to generate a secure `SELECT` query based on the user's natural language question.
+2. **Execution:** The SQL query is safely executed locally on an in-memory SQLite database (`data.db`) created from the uploaded CSV.
+3. **Prompt 2 (Summarization):** The raw query results and original question are sent back to the LLM to format a conversational answer.
 
-### API Endpoints
-- `POST /upload`
-  - **Request:** `multipart/form-data` containing a `.csv` file.
-  - **Action:** Parses CSV into an in-memory Pandas dataframe and writes it to a persistent local SQLite database (`data.db`).
-  - **Response:** JSON containing `message`, `rows` (count), and `columns` (schema list).
+## Environment Variables
+The backend requires environment variables for secure configuration. Never commit these secrets to the repository.
 
-- `GET /rows`
-  - **Query Params:** `limit` (int, default 100), `offset` (int, default 0), `filter_col` (optional str), `filter_val` (optional str).
-  - **Action:** Fetches rows from the SQLite database securely.
-  - **Response:** JSON containing `data` (list of dictionaries) and `total` (total row count for pagination).
+- `GEMINI_API_KEY`: Your Google Gemini API key. This is required for the LLM pipeline to generate SQL and answer queries. Create a `.env` file in the `backend` directory and add: `GEMINI_API_KEY=your_key_here`.
 
-- `POST /ask`
-  - **Request:** JSON `{"question": "What is the average age?"}`
-  - **Action:** Uses the SQLite schema and the user's question to prompt Google Gemini. The LLM generates a clean `SELECT` SQL query. The backend safely executes this query locally, and feeds the results back to the LLM to generate a natural language summary.
-  - **Response:** JSON `{"sql_query": "SELECT AVG(age)...", "answer": "The average age is 28."}`
-
-## 🧠 LLM Prompt Structure
-We use a **two-step "Text-to-SQL" pipeline** rather than uploading raw data to the LLM. This avoids token limits and strict privacy concerns.
-1. **Prompt 1 (SQL Generation):** We inject the database schema (`PRAGMA table_info`) into the prompt and strictly request a `SELECT` query.
-2. **Execution:** The SQL is executed safely on the local SQLite DB.
-3. **Prompt 2 (Summarization):** The raw JSON results and the user's question are sent back to the LLM to format a friendly response.
-
-## 🚀 Setup & TDD Execution
-
-We used strict **Test-Driven Development (TDD)** to build this application. All features were built test-first.
+## How to Run Locally
 
 ### Backend Setup
-```bash
-cd backend
-python -m venv venv
-.\venv\Scripts\Activate.ps1   # (Windows)
-pip install -r requirements.txt
-```
-
-> [!IMPORTANT]
-> **Environment Configuration (Security Requirement):**
-> Never commit API keys or credentials to the repository. The backend uses environment variables for all secrets. Create a `.env` file inside the `backend` directory containing the following:
-> ```env
-> GEMINI_API_KEY=your_google_gemini_api_key_here
-> ```
-
-*Run Backend Tests:*
-```bash
-pytest
-```
-
-*Run Backend Server:*
-```bash
-uvicorn main:app --reload
-```
+1. Open a terminal and navigate to the `backend` directory.
+2. Create and activate a Python virtual environment:
+   ```bash
+   python -m venv venv
+   # On Windows:
+   .\venv\Scripts\Activate.ps1
+   # On macOS/Linux:
+   source venv/bin/activate
+   ```
+3. Install the required dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Create the `.env` file with your `GEMINI_API_KEY`.
+5. Start the backend server:
+   ```bash
+   uvicorn main:app --reload
+   ```
 
 ### Frontend Setup
-```bash
-cd frontend
-npm install
-```
+1. Open a new terminal and navigate to the `frontend` directory.
+2. Install the Node.js dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the frontend development server:
+   ```bash
+   npm run dev
+   ```
 
-*Run Frontend Tests:*
-```bash
-npx vitest run
-```
+## How to Deploy
 
-*Run Frontend Server:*
-```bash
-npm run dev
-```
+### Backend Deployment (e.g., Render)
+1. Connect your GitHub repository to Render (or a similar service) and create a new **Web Service** pointing to the `backend` directory.
+2. **Build Command:** `pip install -r requirements.txt`
+3. **Start Command:** `uvicorn main:app --host 0.0.0.0 --port 10000`
+4. **Environment Variables:** You MUST set the `GEMINI_API_KEY` in your hosting provider's dashboard.
 
-## 🌍 Deployment
-This application is designed to be easily deployed using free cloud platforms.
+### Frontend Deployment (e.g., Vercel)
+1. Connect your GitHub repository to Vercel (or a similar service) and point it to the `frontend` directory.
+2. Set the Framework Preset to **Vite**.
+3. **Build Command:** `npm run build`
+4. Deploy. Vercel will automatically host the static frontend on a public URL. Ensure the frontend is configured to communicate with your live backend URL.
 
-1. **Backend Deployment (Render)**
-   - Connect your GitHub repository to Render and create a new **Web Service** pointing to the `backend` directory.
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `uvicorn main:app --host 0.0.0.0 --port 10000`
-   - **Environment Variables**: You MUST set `GEMINI_API_KEY` in Render's environment variable dashboard.
-
-2. **Frontend Deployment (Vercel)**
-   - Connect your GitHub repository to Vercel and point it to the `frontend` directory.
-   - Set the Framework Preset to **Vite**.
-   - Build Command: `npm run build`
-   - Vercel will automatically build and host the static frontend on a public URL.
-
-## 🔮 What I'd do next
+## What I'd do next
 Given more time, here are the top improvements I would prioritize:
-- **In-App Data Editing**: Add an option to edit the dataset table directly from the app instead of just viewing it.
-- **Advanced Filtering**: Add an option to apply multiple complex filters to the dataset at once.
-- **Frontend Polish**: Clean up and refine the frontend design, ensuring the user interface is intuitive and polished.
-- **AI Performance Tuning**: Look into ways to make the AI load faster, such as streaming responses directly to the user or optimizing the prompt structures.
+- **In-App Data Editing**: Allow users to edit or delete rows directly from the grid interface and sync these changes back to the database.
+- **Advanced Visualization**: Integrate a charting library (like Chart.js or Recharts) to automatically graph query results alongside the LLM's text summary.
+- **Streaming LLM Responses**: Implement Server-Sent Events (SSE) or WebSockets to stream the LLM's answer back to the frontend in real-time, improving perceived performance.
+- **User Authentication**: Add user accounts so different users can upload and manage their own private datasets.
